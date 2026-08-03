@@ -20,6 +20,7 @@ const TAX_RATE = 0.18;
 const DELIVERY_FEE = 100;
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+const GIFTMINT_PARTNER_KEY = process.env.GIFTMINT_PARTNER_KEY || '';
 
 const router = new Router();
 
@@ -510,6 +511,28 @@ router.post('/api/payments/verify', async (req, res) => {
     userEmail: u.email, customerName: u.name, customerEmail: u.email
   };
   await db.createOrder(order);
+
+  // Send this customer a GiftMint bonus gift code for their purchase.
+  // Fire-and-forget - agar GiftMint ka server down ho, Leela Mart ka apna
+  // checkout fail nahi hona chahiye, isliye try/catch me wrap kiya hai.
+  try {
+    await fetch('https://firebrick-loris-129124.hostingersite.com/api/partner/bonus-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Partner-Key': GIFTMINT_PARTNER_KEY
+      },
+      body: JSON.stringify({
+        partnerOrderRef: order.orderId,
+        customerName: u.name,
+        customerEmail: u.email,
+        orderValue: order.grandTotal
+      })
+    });
+  } catch (e) {
+    console.error('GiftMint bonus code request failed:', e.message);
+  }
+
   sendJson(res, 200, order);
 });
 
