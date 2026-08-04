@@ -167,6 +167,51 @@
   .stat-num{font-size:20px;font-weight:800;color:var(--primary-dark);}
   .stat-label{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.4px;}
 .loading-note{padding:60px;text-align:center;color:var(--muted);grid-column:1/-1;}
+
+  /* Mobile */
+  @media (max-width:640px){
+    header{padding:10px 14px;}
+    .header-inner{gap:10px;justify-content:space-between;}
+    .logo{font-size:19px;}
+    .logo span{font-size:9px;}
+    .search-box{order:3;flex-basis:100%;min-width:0;}
+    .header-actions{gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+    #authArea{gap:8px;font-size:12.5px;}
+    .header-actions .cart-btn{padding:7px 10px;font-size:13px;gap:4px;}
+
+    /* Header height is no longer a fixed 64px once it wraps onto multiple
+       lines on mobile, so a hardcoded sticky offset here would overlap the
+       header - just let this strip scroll with the page instead. */
+    .cat-strip{position:static;top:auto;padding:8px 14px;gap:8px;}
+    .cat-chip{padding:6px 12px;font-size:12px;}
+
+    .banner{margin:10px auto;padding:0 14px;}
+    .banner-inner{padding:16px;flex-direction:column;align-items:flex-start;}
+    .banner-inner h1{font-size:18px;}
+    .banner-inner p{font-size:12.5px;}
+    .banner-tag{font-size:12px;padding:7px 12px;}
+
+    .container{padding:6px 14px 50px;}
+    .section-title{font-size:16px;margin:16px 0 10px;}
+    .grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .card{padding:9px;}
+    .thumb{height:115px;}
+    .p-name{font-size:12.5px;min-height:32px;}
+    .price{font-size:14px;}
+    .mrp,.discount{font-size:11px;}
+    .card-actions{gap:6px;}
+    .card-actions button{font-size:10.5px;padding:8px 2px;}
+
+    footer{padding:22px 16px 14px;}
+    .footer-inner{gap:20px;}
+
+    .order-tracker{right:10px;bottom:10px;padding:10px 12px;max-width:calc(100vw - 20px);}
+
+    .invoice-overlay{padding:12px;}
+    .invoice-head{padding:16px 18px;}
+    .invoice-body{padding:16px 18px;}
+    .invoice-footer{padding:12px 18px 18px;}
+  }
 </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
