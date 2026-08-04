@@ -824,6 +824,28 @@ router.post('/api/webhook/razorpay-payment', async (req, res) => {
     userEmail: user.email, customerName: user.name, customerEmail: user.email
   };
   await db.createOrder(order);
+
+  // Send this customer a GiftMint bonus gift code for their purchase.
+  // Fire-and-forget - agar GiftMint ka server down ho, Leela Mart ka apna
+  // checkout fail nahi hona chahiye, isliye try/catch me wrap kiya hai.
+  try {
+    await fetch('https://firebrick-loris-129124.hostingersite.com/api/partner/bonus-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Partner-Key': GIFTMINT_PARTNER_KEY
+      },
+      body: JSON.stringify({
+        partnerOrderRef: order.orderId,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        orderValue: order.grandTotal
+      })
+    });
+  } catch (e) {
+    console.error('GiftMint bonus code request failed:', e.message);
+  }
+
   sendJson(res, 200, {
     ok: true, amount: details.amount, name: user.name, email: user.email,
     orderId: order.orderId, items: priced.items.map(i => `${i.name} x${i.qty}`)
